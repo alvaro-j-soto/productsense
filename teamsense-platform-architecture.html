@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TeamSense Platform Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --dark-teal: #263D39;
+    --light-teal: #6DAEA2;
+    --off-white: #F5FAF8;
+    --bright-yellow: #F6B725;
+    --dark-gold: #BF8808;
+    --dark-orange: #BF4B08;
+    --light-coral: #FF957D;
+    --white: #FFFFFF;
+  }
+
+  body {
+    font-family: 'Urbanist', sans-serif;
+    background: var(--off-white);
+    color: var(--dark-teal);
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  .header .logo-text {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--light-teal);
+    margin-bottom: 8px;
+  }
+
+  .header h1 {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--dark-teal);
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  .header .subtitle {
+    font-size: 16px;
+    font-weight: 400;
+    color: #5a7a74;
+    max-width: 640px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  /* ── Shared layer styles ── */
+  .layer {
+    position: relative;
+    border-radius: 16px;
+    padding: 28px 32px;
+    transition: transform 0.2s ease;
+  }
+  .layer:hover { transform: scale(1.003); }
+
+  .layer-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .layer-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .layer-desc {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    max-width: 800px;
+  }
+
+  /* Connector arrows */
+  .connector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 36px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .connector-line {
+    width: 2px;
+    height: 100%;
+    background: var(--light-teal);
+    position: relative;
+  }
+
+  .connector-line::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid var(--light-teal);
+  }
+
+  .connector-label {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--off-white);
+    padding: 2px 12px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--light-teal);
+    white-space: nowrap;
+  }
+
+  /* Card grid */
+  .cards {
+    display: grid;
+    gap: 12px;
+  }
+  .cards-5 { grid-template-columns: repeat(5, 1fr); }
+  .cards-4 { grid-template-columns: repeat(4, 1fr); }
+  .cards-3 { grid-template-columns: repeat(3, 1fr); }
+  .cards-2 { grid-template-columns: repeat(2, 1fr); }
+
+  .card {
+    background: rgba(255,255,255,0.85);
+    border-radius: 12px;
+    padding: 18px 16px;
+    border: 1px solid rgba(38,61,57,0.08);
+    transition: all 0.2s ease;
+    cursor: default;
+  }
+  .card:hover {
+    border-color: var(--light-teal);
+    box-shadow: 0 4px 16px rgba(38,61,57,0.08);
+    transform: translateY(-2px);
+  }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--dark-teal);
+  }
+
+  .card-desc {
+    font-size: 12px;
+    font-weight: 400;
+    color: #5a7a74;
+    line-height: 1.4;
+  }
+
+  /* Badges */
+  .badge {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+  }
+  .badge-planned {
+    background: rgba(191,136,8,0.12);
+    color: var(--dark-gold);
+  }
+  .badge-core {
+    background: rgba(109,174,162,0.15);
+    color: #3d8a7a;
+  }
+  .badge-ga {
+    background: rgba(38,61,57,0.08);
+    color: #5a7a74;
+  }
+
+  /* ═══════════════════════════════════════
+     ATTENDANCE CORE BLOCK
+     ═══════════════════════════════════════ */
+  .attendance-core {
+    background: var(--white);
+    border: 3px solid var(--dark-teal);
+    border-radius: 20px;
+    padding: 32px;
+    text-align: center;
+    position: relative;
+    z-index: 5;
+  }
+
+  .attendance-core .core-badge {
+    display: inline-block;
+    background: var(--dark-teal);
+    color: var(--white);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+  }
+
+  .attendance-core h2 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--dark-teal);
+    margin-bottom: 6px;
+  }
+
+  .attendance-core .core-desc {
+    font-size: 15px;
+    color: #5a7a74;
+    max-width: 600px;
+    margin: 0 auto 16px;
+    line-height: 1.5;
+  }
+
+  .attendance-core .core-detail {
+    font-size: 12px;
+    color: var(--light-teal);
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ═══════════════════════════════════════
+     PRODUCT GROUPS (side by side)
+     ═══════════════════════════════════════ */
+  .product-groups {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  /* Branching connectors from Attendance */
+  .branch-connector {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    height: 48px;
+    position: relative;
+  }
+
+  .branch-connector svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Engagement Products */
+  .group-engagement {
+    background: var(--white);
+    border: 2px solid var(--dark-teal);
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  .group-engagement .layer-label { color: var(--dark-teal); }
+
+  /* Supervisor Control Surface */
+  .group-scs {
+    background: var(--white);
+    border: 2px solid var(--dark-orange);
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  .group-scs .layer-label { color: var(--dark-orange); }
+
+  .group-scs .card:hover {
+    border-color: var(--dark-orange);
+  }
+
+  /* ═══════════════════════════════════════
+     PLATFORM LAYERS (below products)
+     ═══════════════════════════════════════ */
+
+  /* Platform Features */
+  .layer-platform-features {
+    background: linear-gradient(135deg, #e8f4f1 0%, #dff0ec 100%);
+    border: 2px solid var(--light-teal);
+  }
+  .layer-platform-features .layer-label { color: var(--light-teal); }
+
+  /* AI Agentic Platform */
+  .layer-ai {
+    background: linear-gradient(135deg, #263D39 0%, #1a2d2a 100%);
+    color: var(--off-white);
+    border: 2px solid var(--dark-teal);
+  }
+  .layer-ai .layer-label { color: var(--bright-yellow); }
+  .layer-ai .layer-title { color: var(--white); }
+  .layer-ai .layer-desc { color: rgba(245,250,248,0.8); }
+  .layer-ai .card {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.12);
+  }
+  .layer-ai .card:hover {
+    background: rgba(255,255,255,0.14);
+    border-color: var(--bright-yellow);
+  }
+  .layer-ai .card-title { color: var(--white); }
+  .layer-ai .card-desc { color: rgba(245,250,248,0.7); }
+
+  /* Extensible Data Model */
+  .layer-data {
+    background: linear-gradient(135deg, #2e4a45 0%, #263D39 100%);
+    color: var(--off-white);
+    border: 2px solid #3a5c55;
+  }
+  .layer-data .layer-label { color: var(--bright-yellow); }
+  .layer-data .layer-title { color: var(--white); }
+  .layer-data .layer-desc { color: rgba(245,250,248,0.75); }
+  .layer-data .card {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.1);
+  }
+  .layer-data .card:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: var(--bright-yellow);
+  }
+  .layer-data .card-title { color: var(--white); }
+  .layer-data .card-desc { color: rgba(245,250,248,0.65); }
+
+  /* Infrastructure */
+  .layer-infra {
+    background: #1a2925;
+    color: var(--off-white);
+    border: 2px solid #1a2925;
+  }
+  .layer-infra .layer-label { color: var(--light-teal); }
+  .layer-infra .layer-title { color: rgba(245,250,248,0.9); }
+  .layer-infra .layer-desc { color: rgba(245,250,248,0.6); }
+  .layer-infra .card {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.08);
+  }
+  .layer-infra .card:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: var(--light-teal);
+  }
+  .layer-infra .card-title { color: rgba(245,250,248,0.85); }
+  .layer-infra .card-desc { color: rgba(245,250,248,0.5); }
+
+  /* ═══════════════════════════════════════
+     EXTERNAL SYSTEMS
+     ═══════════════════════════════════════ */
+  .external-row {
+    margin-top: 48px;
+  }
+
+  .external-row h3 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--light-teal);
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .external-cards {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .ext-card {
+    background: var(--white);
+    border: 1px dashed var(--light-teal);
+    border-radius: 10px;
+    padding: 14px 20px;
+    text-align: center;
+    min-width: 120px;
+    transition: all 0.2s;
+  }
+  .ext-card:hover {
+    border-style: solid;
+    transform: translateY(-2px);
+  }
+  .ext-card .ext-icon { font-size: 20px; margin-bottom: 4px; }
+  .ext-card .ext-name { font-size: 12px; font-weight: 700; color: var(--dark-teal); }
+  .ext-card .ext-desc { font-size: 10px; color: #5a7a74; }
+
+  /* ═══════════════════════════════════════
+     LEGEND
+     ═══════════════════════════════════════ */
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #5a7a74;
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  .legend-dot.dot-core { background: var(--white); border: 3px solid var(--dark-teal); }
+  .legend-dot.dot-engagement { background: var(--white); border: 2px solid var(--dark-teal); }
+  .legend-dot.dot-scs { background: var(--white); border: 2px solid var(--dark-orange); }
+  .legend-dot.dot-platform { background: #e8f4f1; border: 2px solid var(--light-teal); }
+  .legend-dot.dot-ai { background: var(--dark-teal); }
+  .legend-dot.dot-data { background: #2e4a45; }
+  .legend-dot.dot-infra { background: #1a2925; }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(38,61,57,0.1);
+    font-size: 12px;
+    color: #5a7a74;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .product-groups { grid-template-columns: 1fr; }
+    .cards-5, .cards-4 { grid-template-columns: repeat(2, 1fr); }
+    .header h1 { font-size: 26px; }
+    .layer, .attendance-core, .group-engagement, .group-scs { padding: 20px; }
+  }
+
+  @media (max-width: 480px) {
+    .cards-5, .cards-4, .cards-3, .cards-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-text">TeamSense</div>
+    <h1>Platform Architecture</h1>
+    <p class="subtitle">How the TeamSense platform powers frontline operations &mdash; from the data layer to the products your customers use every day.</p>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot dot-core"></div>Core Product</div>
+    <div class="legend-item"><div class="legend-dot dot-engagement"></div>Engagement Products</div>
+    <div class="legend-item"><div class="legend-dot dot-scs"></div>Supervisor Control Surface</div>
+    <div class="legend-item"><div class="legend-dot dot-platform"></div>Platform Features</div>
+    <div class="legend-item"><div class="legend-dot dot-ai"></div>AI Orchestration</div>
+    <div class="legend-item"><div class="legend-dot dot-data"></div>Extensible Data Model</div>
+    <div class="legend-item"><div class="legend-dot dot-infra"></div>Infrastructure</div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       ATTENDANCE — THE CORE
+       ═══════════════════════════════════════ -->
+  <div class="attendance-core">
+    <div class="core-badge">Core Product</div>
+    <h2>Attendance</h2>
+    <p class="core-desc">Text-based absence reporting that captures availability truth at the moment it happens. The foundation from which every other product and capability is built.</p>
+    <div class="core-detail">The wedge &bull; The data source &bull; The trust anchor</div>
+    <div style="margin-top:16px; display:flex; justify-content:center; gap:12px;">
+      <span style="background:rgba(109,174,162,0.12); color:#3d8a7a; font-size:11px; font-weight:600; padding:5px 14px; border-radius:6px;">Includes: Points Visibility</span>
+    </div>
+  </div>
+
+  <!-- Branch Connector -->
+  <div class="branch-connector">
+    <svg viewBox="0 0 1100 48" preserveAspectRatio="xMidYMid meet">
+      <!-- Center vertical line down from Attendance -->
+      <line x1="550" y1="0" x2="550" y2="16" stroke="#6DAEA2" stroke-width="2"/>
+      <!-- Horizontal bar -->
+      <line x1="270" y1="16" x2="830" y2="16" stroke="#6DAEA2" stroke-width="2"/>
+      <!-- Left vertical down to Engagement -->
+      <line x1="270" y1="16" x2="270" y2="40" stroke="#6DAEA2" stroke-width="2"/>
+      <polygon points="264,38 276,38 270,48" fill="#6DAEA2"/>
+      <!-- Right vertical down to SCS -->
+      <line x1="830" y1="16" x2="830" y2="40" stroke="#BF4B08" stroke-width="2"/>
+      <polygon points="824,38 836,38 830,48" fill="#BF4B08"/>
+      <!-- Labels -->
+      <rect x="170" y="8" width="80" height="16" rx="3" fill="#F5FAF8"/>
+      <text x="210" y="20" text-anchor="middle" font-family="Urbanist, sans-serif" font-size="9" font-weight="600" fill="#6DAEA2" letter-spacing="1">FEEDS INTO</text>
+      <rect x="740" y="8" width="80" height="16" rx="3" fill="#F5FAF8"/>
+      <text x="780" y="20" text-anchor="middle" font-family="Urbanist, sans-serif" font-size="9" font-weight="600" fill="#BF4B08" letter-spacing="1">FEEDS INTO</text>
+    </svg>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       TWO PRODUCT GROUPS (side by side)
+       ═══════════════════════════════════════ -->
+  <div class="product-groups">
+
+    <!-- Engagement Products -->
+    <div class="group-engagement">
+      <div class="layer-label">Engagement Products</div>
+      <div class="layer-title" style="font-size:18px; margin-bottom:4px;">Reach &amp; Enable the Frontline</div>
+      <p class="layer-desc" style="font-size:13px; margin-bottom:16px;">Tools for communicating with, collecting data from, and empowering frontline employees.</p>
+      <div class="cards" style="grid-template-columns: 1fr;">
+        <div class="card">
+          <span class="badge badge-ga">GA</span>
+          <div class="card-title">Communicate</div>
+          <div class="card-desc">Broadcast &amp; targeted messaging to reach every frontline worker via SMS, email, or app.</div>
+        </div>
+        <div class="card">
+          <span class="badge badge-ga">GA</span>
+          <div class="card-title">Forms</div>
+          <div class="card-desc">Custom frontline data capture &mdash; acknowledgements, policy confirmations, structured collection.</div>
+        </div>
+        <div class="card">
+          <span class="badge badge-ga">GA</span>
+          <div class="card-title">Employee Assistant</div>
+          <div class="card-desc">Self-service via messaging. Employees get answers and complete tasks through text.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Supervisor Control Surface -->
+    <div class="group-scs">
+      <div class="layer-label">Supervisor Control Surface</div>
+      <div class="layer-title" style="font-size:18px; margin-bottom:4px;">Operational Decision Hub</div>
+      <p class="layer-desc" style="font-size:13px; margin-bottom:16px;">Where supervisors see reality, confirm truth, and take action. A distinct product for frontline operations leadership.</p>
+      <div class="cards" style="grid-template-columns: 1fr 1fr; grid-auto-rows: auto;">
+        <div class="card">
+          <span class="badge badge-planned">Planned</span>
+          <div class="card-title">Shift Start Snapshot</div>
+          <div class="card-desc">Real-time view of who's here, who's missing, and why &mdash; delivered at shift start.</div>
+        </div>
+        <div class="card">
+          <span class="badge badge-planned">Planned</span>
+          <div class="card-title">Validation &amp; Override</div>
+          <div class="card-desc">Supervisors confirm or correct system data. Their judgment creates trusted truth.</div>
+        </div>
+        <div class="card">
+          <span class="badge badge-planned">Planned</span>
+          <div class="card-title">Recommendations</div>
+          <div class="card-desc">Explainable backfill suggestions with confidence signals. Approve, reject, or modify.</div>
+        </div>
+        <div class="card">
+          <span class="badge badge-planned">Planned</span>
+          <div class="card-title">Automated Backfill</div>
+          <div class="card-desc">Supervisor-trusted shift coverage automation. Detects gaps, recommends replacements, tracks outcomes.</div>
+        </div>
+        <div class="card">
+          <span class="badge badge-planned">Planned</span>
+          <div class="card-title">Points Calculator Engine</div>
+          <div class="card-desc">Configurable points calculation per customer. Automates point assignment with supervisor confirmation for legal compliance.</div>
+        </div>
+        <div class="card">
+          <span class="badge badge-planned">Planned</span>
+          <div class="card-title">Employee Skills &amp; Certifications</div>
+          <div class="card-desc">Training, certifications, experience, recency, and safety restrictions &mdash; validated by supervisors.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Connector -->
+  <div class="connector">
+    <div class="connector-line"></div>
+    <span class="connector-label">all products run on</span>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SHARED PLATFORM FEATURES
+       ═══════════════════════════════════════ -->
+  <div class="layer layer-platform-features">
+    <div class="layer-label">Shared Platform Features</div>
+    <div class="layer-title">Capabilities Every Product Uses</div>
+    <p class="layer-desc">Shared services that power all products. Built once, leveraged everywhere &mdash; this is the platform advantage.</p>
+    <div class="cards cards-4">
+      <div class="card">
+        <div class="card-title">Permissions &amp; Scoping</div>
+        <div class="card-desc">Role-based access (Employee, Team Lead, Admin) with site-first scope enforcement.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Notifications Engine</div>
+        <div class="card-desc">Multi-channel delivery via SMS (Twilio/Sinch) and email (Mailgun). Configurable per user.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Insights &amp; Reporting</div>
+        <div class="card-desc">Real-time operational insights. Shift-level awareness, not just historical trend analysis.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">User Management</div>
+        <div class="card-desc">Canonical employee identity. Assign roles, sites, and notification scopes. Single source of truth for people.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connector -->
+  <div class="connector">
+    <div class="connector-line"></div>
+    <span class="connector-label">orchestrated by</span>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       AI AGENTIC PLATFORM
+       ═══════════════════════════════════════ -->
+  <div class="layer layer-ai">
+    <div class="layer-label">Intelligent Orchestration</div>
+    <div class="layer-title">AI Agentic Platform</div>
+    <p class="layer-desc">Turns data into decisions and decisions into actions. The intelligence layer that connects what's happening to what should happen next.</p>
+    <div class="cards cards-3">
+      <div class="card">
+        <span class="badge badge-planned">Planned</span>
+        <div class="card-title">Recommendation Engine</div>
+        <div class="card-desc">Explainable backfill suggestions with confidence scores. Combines availability + skills + constraints.</div>
+      </div>
+      <div class="card">
+        <span class="badge badge-planned">Planned</span>
+        <div class="card-title">Action Orchestration</div>
+        <div class="card-desc">Converts supervisor-approved decisions into tracked, acknowledged execution across systems.</div>
+      </div>
+      <div class="card">
+        <span class="badge badge-planned">Planned</span>
+        <div class="card-title">Learning Loop</div>
+        <div class="card-desc">Ties decisions to actions to outcomes. Recommendations improve over time from real operational data.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connector -->
+  <div class="connector">
+    <div class="connector-line" style="background: var(--bright-yellow);"></div>
+    <span class="connector-label" style="color: var(--dark-gold);">built on</span>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       EXTENSIBLE DATA MODEL
+       ═══════════════════════════════════════ -->
+  <div class="layer layer-data">
+    <div class="layer-label">Data Foundation</div>
+    <div class="layer-title">Extensible Data Model</div>
+    <p class="layer-desc">The canonical source of truth for people, roles, and organizational structure. Every product and platform feature depends on this precise, consistent data layer.</p>
+    <div style="display:inline-block; background:rgba(246,183,37,0.15); color:#BF8808; font-size:10px; font-weight:700; letter-spacing:1.5px; padding:4px 12px; border-radius:4px; margin-bottom:14px;">INTERNAL: THIS IS WHAT WE CALL &ldquo;TEDS&rdquo; &mdash; DO NOT USE THIS TERM WITH CUSTOMERS</div>
+    <div class="cards cards-4">
+      <div class="card">
+        <div class="card-title">Employee Identity</div>
+        <div class="card-desc">Canonical identity with site-first structure. Replaces legacy hierarchy with precise, consistent fields.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Roles &amp; Scopes</div>
+        <div class="card-desc">Who can act on whom. Site assignments, notification scope, and permission boundaries.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Defaults Engine</div>
+        <div class="card-desc">Deterministic behavior guarantees. Consistent data handling across UI, importers, and integrations.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">HRIS Sync</div>
+        <div class="card-desc">Bi-directional data flow with Workday, UKG, ADP and more. Keeps TeamSense aligned with systems of record.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Connector -->
+  <div class="connector">
+    <div class="connector-line" style="background: #3d6960;"></div>
+    <span class="connector-label" style="color: #3d6960;">runs on</span>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       PLATFORM INFRASTRUCTURE
+       ═══════════════════════════════════════ -->
+  <div class="layer layer-infra">
+    <div class="layer-label">Platform Infrastructure</div>
+    <div class="layer-title">Cloud-Native Foundation</div>
+    <p class="layer-desc">High-performance, serverless infrastructure built for scale, reliability, and real-time processing.</p>
+    <div class="cards cards-5">
+      <div class="card">
+        <div class="card-title">Azure Functions</div>
+        <div class="card-desc">Serverless compute for event-driven processing at scale.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">CosmosDB</div>
+        <div class="card-desc">Global, multi-model database for messages and operational data.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Message Queues</div>
+        <div class="card-desc">Azure Queue Storage for reliable async message processing.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">PostgreSQL</div>
+        <div class="card-desc">Primary relational data store for employee and organizational data.</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Observability</div>
+        <div class="card-desc">Datadog APM, metrics, and LLM evaluation. Real-time system health.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- External Systems -->
+  <div class="external-row">
+    <h3>Connected External Systems</h3>
+    <div class="external-cards">
+      <div class="ext-card">
+        <div class="ext-icon">&#128101;</div>
+        <div class="ext-name">HRIS</div>
+        <div class="ext-desc">Workday, UKG, ADP</div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-icon">&#9201;</div>
+        <div class="ext-name">Time &amp; Attendance</div>
+        <div class="ext-desc">Punch / clock-in data</div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-icon">&#128197;</div>
+        <div class="ext-name">Scheduling</div>
+        <div class="ext-desc">Shift assignments</div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-icon">&#128172;</div>
+        <div class="ext-name">SMS Providers</div>
+        <div class="ext-desc">Twilio, Sinch</div>
+      </div>
+      <div class="ext-card">
+        <div class="ext-icon">&#128231;</div>
+        <div class="ext-name">Email</div>
+        <div class="ext-desc">Mailgun</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       GTM GUIDANCE
+       ═══════════════════════════════════════ -->
+  <div style="margin-top:56px;">
+    <div style="text-align:center; margin-bottom:32px;">
+      <div style="font-size:11px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:#6DAEA2; margin-bottom:4px;">GTM Guidance</div>
+      <div style="font-size:26px; font-weight:800; color:#263D39;">How to Talk About the Platform</div>
+      <p style="font-size:14px; color:#5a7a74; max-width:640px; margin:8px auto 0; line-height:1.5;">Lead with customer value. The platform is why our products are powerful &mdash; but customers care about outcomes, not architecture.</p>
+    </div>
+
+    <!-- Three-column guidance -->
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:24px;">
+
+      <!-- Lead With -->
+      <div style="background:#FFFFFF; border:2px solid #263D39; border-radius:16px; padding:24px;">
+        <div style="background:#263D39; color:#FFFFFF; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:4px 12px; border-radius:20px; display:inline-block; margin-bottom:12px;">Lead with this</div>
+        <div style="font-size:16px; font-weight:700; color:#263D39; margin-bottom:8px;">Direct Customer Value</div>
+        <p style="font-size:12px; color:#5a7a74; line-height:1.5; margin-bottom:12px;">These are the products and features customers see, use, and get value from every day.</p>
+        <div style="font-size:12px; color:#263D39; line-height:2;">
+          <div><span style="color:#6DAEA2; font-weight:700;">&#10003;</span> Attendance &amp; Points Visibility</div>
+          <div><span style="color:#6DAEA2; font-weight:700;">&#10003;</span> Communicate</div>
+          <div><span style="color:#6DAEA2; font-weight:700;">&#10003;</span> Forms</div>
+          <div><span style="color:#6DAEA2; font-weight:700;">&#10003;</span> Employee Assistant</div>
+          <div><span style="color:#6DAEA2; font-weight:700;">&#10003;</span> Supervisor Control Surface</div>
+          <div><span style="color:#6DAEA2; font-weight:700;">&#10003;</span> Insights &amp; Reporting</div>
+        </div>
+      </div>
+
+      <!-- Mention When Asked -->
+      <div style="background:#E8F4F1; border:2px solid #6DAEA2; border-radius:16px; padding:24px;">
+        <div style="background:#6DAEA2; color:#FFFFFF; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:4px 12px; border-radius:20px; display:inline-block; margin-bottom:12px;">Mention when asked</div>
+        <div style="font-size:16px; font-weight:700; color:#263D39; margin-bottom:8px;">Platform Capabilities</div>
+        <p style="font-size:12px; color:#5a7a74; line-height:1.5; margin-bottom:12px;">Shared features that explain why products work well together. Good for expansion conversations and technical buyers.</p>
+        <div style="font-size:12px; color:#263D39; line-height:2;">
+          <div><span style="color:#6DAEA2; font-weight:700;">&#8594;</span> Permissions &amp; scoping</div>
+          <div><span style="color:#6DAEA2; font-weight:700;">&#8594;</span> Notifications engine</div>
+          <div><span style="color:#6DAEA2; font-weight:700;">&#8594;</span> User management</div>
+          <div><span style="color:#6DAEA2; font-weight:700;">&#8594;</span> HRIS integrations</div>
+          <div><span style="color:#6DAEA2; font-weight:700;">&#8594;</span> AI-powered recommendations</div>
+        </div>
+      </div>
+
+      <!-- Don't Lead With -->
+      <div style="background:#FDF5F3; border:2px solid #BF4B08; border-radius:16px; padding:24px;">
+        <div style="background:#BF4B08; color:#FFFFFF; font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:4px 12px; border-radius:20px; display:inline-block; margin-bottom:12px;">Do not lead with</div>
+        <div style="font-size:16px; font-weight:700; color:#263D39; margin-bottom:8px;">Internal Infrastructure</div>
+        <p style="font-size:12px; color:#5a7a74; line-height:1.5; margin-bottom:12px;">These are engineering terms. Customers don't need to know how the engine works &mdash; just what it does for them.</p>
+        <div style="font-size:12px; color:#263D39; line-height:2;">
+          <div><span style="color:#BF4B08; font-weight:700;">&#10007;</span> &ldquo;TEDS&rdquo; <span style="font-size:10px; color:#5a7a74;">(say &ldquo;our data model&rdquo;)</span></div>
+          <div><span style="color:#BF4B08; font-weight:700;">&#10007;</span> Extensible Data Model</div>
+          <div><span style="color:#BF4B08; font-weight:700;">&#10007;</span> Azure / CosmosDB / Rust</div>
+          <div><span style="color:#BF4B08; font-weight:700;">&#10007;</span> Queue-based processing</div>
+          <div><span style="color:#BF4B08; font-weight:700;">&#10007;</span> LeSync / double-write</div>
+          <div><span style="color:#BF4B08; font-weight:700;">&#10007;</span> Defaults engine</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Key phrases callout -->
+    <div style="background:#FFFFFF; border:2px solid #F6B725; border-radius:16px; padding:24px 32px;">
+      <div style="font-size:14px; font-weight:700; color:#263D39; margin-bottom:12px;">Suggested Customer-Facing Language</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px 32px; font-size:13px;">
+        <div style="color:#263D39; line-height:1.6;">
+          <span style="font-weight:700; color:#BF4B08;">Instead of:</span> &ldquo;Our TEDS data layer ensures canonical employee identity&rdquo;<br/>
+          <span style="font-weight:700; color:#6DAEA2;">Say:</span> &ldquo;TeamSense keeps one clean record for every employee across all your systems&rdquo;
+        </div>
+        <div style="color:#263D39; line-height:1.6;">
+          <span style="font-weight:700; color:#BF4B08;">Instead of:</span> &ldquo;Our extensible data model supports bi-directional HRIS sync&rdquo;<br/>
+          <span style="font-weight:700; color:#6DAEA2;">Say:</span> &ldquo;TeamSense stays in sync with Workday, UKG, and ADP automatically&rdquo;
+        </div>
+        <div style="color:#263D39; line-height:1.6;">
+          <span style="font-weight:700; color:#BF4B08;">Instead of:</span> &ldquo;Our AI agentic platform orchestrates actions&rdquo;<br/>
+          <span style="font-weight:700; color:#6DAEA2;">Say:</span> &ldquo;When someone calls out, TeamSense can suggest the best replacement and handle the outreach&rdquo;
+        </div>
+        <div style="color:#263D39; line-height:1.6;">
+          <span style="font-weight:700; color:#BF4B08;">Instead of:</span> &ldquo;We have a platform with shared services&rdquo;<br/>
+          <span style="font-weight:700; color:#6DAEA2;">Say:</span> &ldquo;When you add Communicate, it works instantly &mdash; same employees, same permissions, no setup&rdquo;
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    TeamSense Platform Architecture &mdash; Internal Reference for GTM Teams &mdash; 2026
+  </div>
+
+</div>
+</body>
+</html>

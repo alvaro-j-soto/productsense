@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TeamSense Product Roadmap</title>
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --dark-teal: #263D39;
+    --light-teal: #6DAEA2;
+    --off-white: #F5FAF8;
+    --bright-yellow: #F6B725;
+    --dark-gold: #BF8808;
+    --dark-orange: #BF4B08;
+    --light-coral: #FF957D;
+    --white: #FFFFFF;
+  }
+
+  body {
+    font-family: 'Urbanist', sans-serif;
+    background: var(--off-white);
+    color: var(--dark-teal);
+    min-height: 100vh;
+    padding: 40px 20px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .header .logo-text {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--light-teal);
+    margin-bottom: 8px;
+  }
+
+  .header h1 {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--dark-teal);
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  .header .subtitle {
+    font-size: 16px;
+    font-weight: 400;
+    color: #5a7a74;
+    max-width: 660px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  /* Horizon Explainer */
+  .horizon-explainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .horizon-label {
+    text-align: center;
+    padding: 16px 20px;
+    border-radius: 12px;
+    cursor: default;
+    transition: transform 0.2s;
+  }
+  .horizon-label:hover { transform: scale(1.02); }
+
+  .horizon-label .h-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+  }
+
+  .horizon-label .h-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .horizon-label .h-desc {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .hz-now {
+    background: rgba(109,174,162,0.12);
+    border: 2px solid var(--light-teal);
+  }
+  .hz-now .h-badge { background: var(--light-teal); color: var(--white); }
+  .hz-now .h-title { color: var(--dark-teal); }
+  .hz-now .h-desc { color: #5a7a74; }
+
+  .hz-next {
+    background: rgba(246,183,37,0.08);
+    border: 2px solid var(--bright-yellow);
+  }
+  .hz-next .h-badge { background: var(--bright-yellow); color: var(--dark-teal); }
+  .hz-next .h-title { color: var(--dark-teal); }
+  .hz-next .h-desc { color: #5a7a74; }
+
+  .hz-later {
+    background: rgba(191,75,8,0.06);
+    border: 2px solid var(--light-coral);
+  }
+  .hz-later .h-badge { background: var(--light-coral); color: var(--dark-teal); }
+  .hz-later .h-title { color: var(--dark-teal); }
+  .hz-later .h-desc { color: #5a7a74; }
+
+  /* ═══════════════════════════════════════
+     ROADMAP GRID
+     ═══════════════════════════════════════ */
+  .roadmap-grid {
+    display: grid;
+    grid-template-columns: 180px 1fr 1fr 1fr;
+    gap: 0;
+  }
+
+  /* Column headers */
+  .col-header {
+    padding: 14px 16px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 3px solid var(--dark-teal);
+  }
+
+  .col-header-label {
+    background: var(--dark-teal);
+    color: var(--white);
+    border-radius: 12px 0 0 0;
+    text-align: left;
+    padding-left: 20px;
+  }
+
+  .col-header-now {
+    color: var(--dark-teal);
+    background: rgba(109,174,162,0.08);
+    border-bottom-color: var(--light-teal);
+  }
+  .col-header-next {
+    color: var(--dark-teal);
+    background: rgba(246,183,37,0.06);
+    border-bottom-color: var(--bright-yellow);
+  }
+  .col-header-later {
+    color: var(--dark-teal);
+    background: rgba(255,149,125,0.06);
+    border-bottom-color: var(--light-coral);
+    border-radius: 0 12px 0 0;
+  }
+
+  /* Row labels */
+  .row-label {
+    padding: 20px 16px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-right: 2px solid rgba(38,61,57,0.08);
+  }
+
+  .row-label .rl-category {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .row-label .rl-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--dark-teal);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .row-label .rl-desc {
+    font-size: 11px;
+    color: #5a7a74;
+    line-height: 1.3;
+  }
+
+  /* Row colors */
+  .rl-attendance { background: var(--white); border-left: 4px solid var(--dark-teal); }
+  .rl-attendance .rl-category { color: var(--light-teal); }
+
+  .rl-engagement { background: var(--white); border-left: 4px solid var(--dark-teal); }
+  .rl-engagement .rl-category { color: var(--dark-teal); }
+
+  .rl-scs { background: var(--white); border-left: 4px solid var(--dark-orange); }
+  .rl-scs .rl-category { color: var(--dark-orange); }
+
+  .rl-platform { background: var(--white); border-left: 4px solid var(--light-teal); }
+  .rl-platform .rl-category { color: var(--light-teal); }
+
+  /* Cells */
+  .cell {
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-bottom: 1px solid rgba(38,61,57,0.06);
+  }
+
+  .cell-now { background: rgba(109,174,162,0.04); }
+  .cell-next { background: rgba(246,183,37,0.03); }
+  .cell-later { background: rgba(255,149,125,0.03); }
+
+  /* Row separators */
+  .row-border-attendance .cell,
+  .row-border-attendance.row-label {
+    border-bottom: 2px solid rgba(38,61,57,0.1);
+  }
+  .row-border-engagement .cell,
+  .row-border-engagement.row-label {
+    border-bottom: 2px solid rgba(38,61,57,0.1);
+  }
+  .row-border-scs .cell,
+  .row-border-scs.row-label {
+    border-bottom: 2px solid rgba(191,75,8,0.15);
+  }
+  .row-border-platform .cell,
+  .row-border-platform.row-label {
+    border-bottom: none;
+  }
+
+  /* Item cards */
+  .item {
+    background: var(--white);
+    border: 1px solid rgba(38,61,57,0.08);
+    border-radius: 10px;
+    padding: 12px 14px;
+    transition: all 0.2s ease;
+    cursor: default;
+    position: relative;
+  }
+  .item:hover {
+    border-color: var(--light-teal);
+    box-shadow: 0 4px 16px rgba(38,61,57,0.08);
+    transform: translateY(-2px);
+  }
+
+  .item-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark-teal);
+    margin-bottom: 3px;
+    line-height: 1.2;
+  }
+
+  .item-desc {
+    font-size: 11px;
+    color: #5a7a74;
+    line-height: 1.4;
+  }
+
+  /* Badges */
+  .badge {
+    display: inline-block;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-bottom: 5px;
+  }
+  .badge-ga {
+    background: rgba(109,174,162,0.15);
+    color: #3d8a7a;
+  }
+  .badge-planned {
+    background: rgba(191,136,8,0.12);
+    color: var(--dark-gold);
+  }
+
+  /* SCS-specific hover */
+  .item-scs:hover {
+    border-color: var(--dark-orange);
+  }
+
+  /* Empty cell indicator */
+  .empty-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    border: 1px dashed rgba(38,61,57,0.1);
+    border-radius: 10px;
+    font-size: 11px;
+    color: rgba(90,122,116,0.4);
+    font-weight: 500;
+  }
+
+  /* ═══════════════════════════════════════
+     STRATEGIC CONTEXT
+     ═══════════════════════════════════════ */
+  .strategy-note {
+    margin-top: 48px;
+    background: var(--white);
+    border: 2px solid var(--dark-teal);
+    border-radius: 16px;
+    padding: 28px 32px;
+  }
+
+  .strategy-note .sn-badge {
+    display: inline-block;
+    background: var(--dark-teal);
+    color: var(--white);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  .strategy-note h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dark-teal);
+    margin-bottom: 8px;
+  }
+
+  .strategy-note p {
+    font-size: 14px;
+    color: #5a7a74;
+    line-height: 1.6;
+    max-width: 800px;
+  }
+
+  .progression {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .prog-step {
+    background: rgba(109,174,162,0.08);
+    border: 1px solid rgba(109,174,162,0.2);
+    border-radius: 8px;
+    padding: 10px 16px;
+    text-align: center;
+    transition: all 0.2s;
+    cursor: default;
+    flex: 1;
+    min-width: 140px;
+  }
+  .prog-step:hover {
+    background: rgba(109,174,162,0.15);
+    transform: translateY(-2px);
+  }
+  .prog-step .ps-num {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--light-teal);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+  }
+  .prog-step .ps-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--dark-teal);
+  }
+
+  .prog-arrow {
+    color: var(--light-teal);
+    font-size: 18px;
+    padding: 0 2px;
+    flex-shrink: 0;
+  }
+
+  /* ═══════════════════════════════════════
+     LEGEND & FOOTER
+     ═══════════════════════════════════════ */
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #5a7a74;
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+  }
+
+  .legend-dot.dot-attendance { background: var(--white); border: 3px solid var(--dark-teal); }
+  .legend-dot.dot-engagement { background: var(--white); border: 2px solid var(--dark-teal); }
+  .legend-dot.dot-scs { background: var(--white); border: 2px solid var(--dark-orange); }
+  .legend-dot.dot-platform { background: #e8f4f1; border: 2px solid var(--light-teal); }
+
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(38,61,57,0.1);
+    font-size: 12px;
+    color: #5a7a74;
+  }
+
+  /* ═══════════════════════════════════════
+     GTM TALK TRACK
+     ═══════════════════════════════════════ */
+  .talk-track {
+    margin-top: 48px;
+  }
+
+  .talk-track h3 {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--light-teal);
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .talk-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .talk-card {
+    background: var(--white);
+    border: 1px solid rgba(38,61,57,0.08);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .talk-card:hover {
+    border-color: var(--light-teal);
+    box-shadow: 0 4px 16px rgba(38,61,57,0.08);
+    transform: translateY(-2px);
+  }
+
+  .talk-card .tc-horizon {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .tc-now .tc-horizon { color: var(--light-teal); }
+  .tc-next .tc-horizon { color: var(--dark-gold); }
+  .tc-later .tc-horizon { color: var(--dark-orange); }
+
+  .talk-card .tc-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark-teal);
+    margin-bottom: 6px;
+  }
+
+  .talk-card .tc-script {
+    font-size: 13px;
+    color: #5a7a74;
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .roadmap-grid {
+      grid-template-columns: 140px 1fr 1fr 1fr;
+    }
+    .horizon-explainer { grid-template-columns: 1fr; }
+    .talk-cards { grid-template-columns: 1fr; }
+    .rl-name { font-size: 14px; }
+  }
+
+  @media (max-width: 680px) {
+    .roadmap-grid {
+      grid-template-columns: 1fr;
+    }
+    .col-header { display: none; }
+    .row-label { border-left-width: 3px; padding: 16px; }
+    .cell { padding: 12px; }
+    .cell::before {
+      content: attr(data-horizon);
+      display: block;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--light-teal);
+      margin-bottom: 8px;
+    }
+    .progression { flex-direction: column; }
+    .prog-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-text">TeamSense</div>
+    <h1>Product Roadmap</h1>
+    <p class="subtitle">Where we are today, what's coming next, and where we're headed &mdash; organized by product group for GTM teams.</p>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot dot-attendance"></div>Attendance (Core)</div>
+    <div class="legend-item"><div class="legend-dot dot-engagement"></div>Engagement Products</div>
+    <div class="legend-item"><div class="legend-dot dot-scs"></div>Supervisor Control Surface</div>
+    <div class="legend-item"><div class="legend-dot dot-platform"></div>Platform</div>
+  </div>
+
+  <!-- Horizon Explainer -->
+  <div class="horizon-explainer">
+    <div class="horizon-label hz-now">
+      <div class="h-badge">Now</div>
+      <div class="h-title">Available Today</div>
+      <div class="h-desc">Products and features that are generally available. Sell these with confidence.</div>
+    </div>
+    <div class="horizon-label hz-next">
+      <div class="h-badge">Next</div>
+      <div class="h-title">In Development</div>
+      <div class="h-desc">Actively being built. Share with interested prospects to build excitement, but don't commit delivery dates.</div>
+    </div>
+    <div class="horizon-label hz-later">
+      <div class="h-badge">Later</div>
+      <div class="h-title">On the Roadmap</div>
+      <div class="h-desc">Planned and prioritized. Mention in strategic conversations about platform direction and vision.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       ROADMAP GRID
+       ═══════════════════════════════════════ -->
+  <div class="roadmap-grid">
+
+    <!-- Column Headers -->
+    <div class="col-header col-header-label">Product</div>
+    <div class="col-header col-header-now">Now</div>
+    <div class="col-header col-header-next">Next</div>
+    <div class="col-header col-header-later">Later</div>
+
+    <!-- ─── ROW 1: ATTENDANCE ─── -->
+    <div class="row-label rl-attendance row-border-attendance">
+      <div class="rl-category">Core Product</div>
+      <div class="rl-name">Attendance</div>
+      <div class="rl-desc">The foundation everything else is built on</div>
+    </div>
+
+    <div class="cell cell-now row-border-attendance" data-horizon="Now">
+      <div class="item">
+        <span class="badge badge-ga">GA</span>
+        <div class="item-title">SMS Absence Reporting</div>
+        <div class="item-desc">Employees report absences via text. Reasons collected, supervisors notified instantly.</div>
+      </div>
+      <div class="item">
+        <span class="badge badge-ga">GA</span>
+        <div class="item-title">Points Visibility</div>
+        <div class="item-desc">Employees see their attendance points balance when logging absences. Proven 39% absenteeism reduction.</div>
+      </div>
+      <div class="item">
+        <span class="badge badge-ga">GA</span>
+        <div class="item-title">HRIS Sync</div>
+        <div class="item-desc">Attendance events automatically sync to Workday, UKG, ADP, and other systems of record.</div>
+      </div>
+    </div>
+
+    <div class="cell cell-next row-border-attendance" data-horizon="Next">
+      <div class="item">
+        <span class="badge badge-planned">Planned</span>
+        <div class="item-title">Availability Truth</div>
+        <div class="item-desc">All absence types &mdash; NCNS, PTO, partials, LOA/FMLA &mdash; normalized into a single trusted view.</div>
+      </div>
+      <div class="item">
+        <span class="badge badge-planned">Planned</span>
+        <div class="item-title">NCNS Detection</div>
+        <div class="item-desc">Automatically detect no-call/no-shows by comparing schedule data to punch data in real time.</div>
+      </div>
+    </div>
+
+    <div class="cell cell-later row-border-attendance" data-horizon="Later">
+      <div class="item">
+        <span class="badge badge-planned">Planned</span>
+        <div class="item-title">Advanced Attendance Analytics</div>
+        <div class="item-desc">Shift-level attendance patterns, trend analysis, and predictive insights for proactive planning.</div>
+      </div>
+    </div>
+
+    <!-- ─── ROW 2: ENGAGEMENT PRODUCTS ─── -->
+    <div class="row-label rl-engagement row-border-engagement">
+      <div class="rl-category">Engagement Products</div>
+      <div class="rl-name">Communicate, Forms &amp; Employee Assistant</div>
+      <div class="rl-desc">Reach and empower frontline employees</div>
+    </div>
+
+    <div class="cell cell-now row-border-engagement" data-horizon="Now">
+      <div class="item">
+        <span class="badge badge-ga">GA</span>
+        <div class="item-title">Communicate</div>
+        <div class="item-desc">Broadcast and targeted messaging to every frontline worker via SMS, email, or app.</div>
+      </div>
+      <div class="item">
+        <span class="badge badge-ga">GA</span>
+        <div class="item-title">Forms</div>
+        <div class="item-desc">Custom data capture &mdash; acknowledgements, policy confirmations, structured collection.</div>
+      </div>
+      <div class="item">
+        <span class="badge badge-ga">GA</span>
+        <div class="item-title">Employee Assistant</div>
+        <div class="item-desc">Self-service via text. Employees get answers and complete tasks through messaging.</div>
+      </div>
+    </div>
+
+    <div class="cell cell-next row-border-engagement" data-horizon="Next">
+      <div class="item">
+        <span class="badge badge-planned">Planned</span>
+        <div class="item-title">Forms Self-Service</div>
+        <div class="item-desc">HR teams create and manage their own forms without engineering support. Acknowledgements, data collection, policy confirmations.</div>
+      </div>
+    </div>
+
+    <div class="cell cell-later row-border-engagement" data-horizon="Later">
+      <div class="empty-cell">Maintenance &amp; enhancements</div>
+    </div>
+
+    <!-- ─── ROW 3: SUPERVISOR CONTROL SURFACE ─── -->
+    <div class="row-label rl-scs row-border-scs">
+      <div class="rl-category">Supervisor Control Surface</div>
+      <div class="rl-name">Operational Decision Hub</div>
+      <div class="rl-desc">See reality, confirm truth, take action</div>
+    </div>
+
+    <div class="cell cell-now row-border-scs" data-horizon="Now">
+      <div class="empty-cell">Coming soon</div>
+    </div>
+
+    <div class="cell cell-next row-border-scs" data-horizon="Next">
+      <div class="item item-scs">
+        <span class="badge badge-planned">Planned</span>
+        <div class="item-title">Shift Start Snapshot</div>
+        <div class="item-desc">Real-time view of who's here, who's missing, and why &mdash; delivered to supervisors at shift start.</div>
+      </div>
+      <div class="item item-scs">
+        <span class="badge badge-planned">Planned</span>
+        <div class="item-title">Validation &amp; Override</div>
+        <div class="item-desc">Supervisors confirm or correct system data. Their judgment becomes trusted operational truth.</div>
+      </div>
+    </div>
+
+    <div class="cell cell-later row-border-scs" data-horizon="Later">
+      <div class="item item-scs">
+        <span class="badge badge-planned">Planned</span>
+        <div class="item-title">Recommendations</div>
+        <div class="item-desc">Explainable coverage suggestions with confidence signals. Approve, reject, or modify.</div>
+      </div>
+      <div class="item item-scs">
+        <span class="badge badge-planned">Planned</span>
+        <div class="item-title">Automated Backfill</div>
+        <div class="item-desc">Supervisor-trusted shift coverage automation. Detects gaps, suggests replacements, tracks outcomes.</div>
+      </div>
+      <div class="item item-scs">
+        <span class="badge badge-planned">Planned</span>
+        <div class="item-title">Points Calculator Engine</div>
+        <div class="item-desc">Configurable points calculation per customer with supervisor confirmation for compliance.</div>
+      </div>
+      <div class="item item-scs">
+        <span class="badge badge-planned">Planned</span>
+        <div class="item-title">Employee Skills &amp; Certifications</div>
+        <div class="item-desc">Training, certifications, experience, and safety restrictions &mdash; validated by supervisors.</div>
+      </div>
+    </div>
+
+    <!-- ─── ROW 4: PLATFORM ─── -->
+    <div class="row-label rl-platform row-border-platform">
+      <div class="rl-category">Platform</div>
+      <div class="rl-name">Shared Capabilities</div>
+      <div class="rl-desc">What powers every product</div>
+    </div>
+
+    <div class="cell cell-now row-border-platform" data-horizon="Now">
+      <div class="item">
+        <span class="badge badge-ga">GA</span>
+        <div class="item-title">Permissions &amp; Scoping</div>
+        <div class="item-desc">Role-based access with site-first scope enforcement.</div>
+      </div>
+      <div class="item">
+        <span class="badge badge-ga">GA</span>
+        <div class="item-title">Notifications Engine</div>
+        <div class="item-desc">Multi-channel delivery via SMS and email. Configurable per user.</div>
+      </div>
+      <div class="item">
+        <span class="badge badge-ga">GA</span>
+        <div class="item-title">HRIS Integrations</div>
+        <div class="item-desc">Pre-built connectors for Workday, UKG, ADP, and more.</div>
+      </div>
+    </div>
+
+    <div class="cell cell-next row-border-platform" data-horizon="Next">
+      <div class="item">
+        <span class="badge badge-planned">Planned</span>
+        <div class="item-title">Enhanced Data Model</div>
+        <div class="item-desc">One clean employee record across all systems. Precise identity, roles, and organizational structure.</div>
+      </div>
+      <div class="item">
+        <span class="badge badge-planned">Planned</span>
+        <div class="item-title">Real-Time Insights</div>
+        <div class="item-desc">Shift-level operational awareness. See what's happening now, not just what happened last quarter.</div>
+      </div>
+    </div>
+
+    <div class="cell cell-later row-border-platform" data-horizon="Later">
+      <div class="item">
+        <span class="badge badge-planned">Planned</span>
+        <div class="item-title">AI-Powered Intelligence</div>
+        <div class="item-desc">Recommendation engine, action orchestration, and learning loops that improve over time.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       STRATEGIC CONTEXT
+       ═══════════════════════════════════════ -->
+  <div class="strategy-note">
+    <div class="sn-badge">Strategic Context</div>
+    <h3>The Path We're Building</h3>
+    <p>TeamSense earns platform control through a deliberate operational progression. Each step builds trust and data that unlocks the next. This is the story of how attendance data becomes operational intelligence.</p>
+    <div class="progression">
+      <div class="prog-step">
+        <div class="ps-num">Step 1</div>
+        <div class="ps-name">Availability Truth</div>
+      </div>
+      <span class="prog-arrow">&rarr;</span>
+      <div class="prog-step">
+        <div class="ps-num">Step 2</div>
+        <div class="ps-name">Shift Awareness</div>
+      </div>
+      <span class="prog-arrow">&rarr;</span>
+      <div class="prog-step">
+        <div class="ps-num">Step 3</div>
+        <div class="ps-name">Skills &amp; Eligibility</div>
+      </div>
+      <span class="prog-arrow">&rarr;</span>
+      <div class="prog-step">
+        <div class="ps-num">Step 4</div>
+        <div class="ps-name">Smart Coverage</div>
+      </div>
+      <span class="prog-arrow">&rarr;</span>
+      <div class="prog-step">
+        <div class="ps-num">Step 5</div>
+        <div class="ps-name">Learning &amp; Optimization</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       GTM TALK TRACK
+       ═══════════════════════════════════════ -->
+  <div class="talk-track">
+    <h3>How to Position Each Horizon</h3>
+    <div class="talk-cards">
+      <div class="talk-card tc-now">
+        <div class="tc-horizon">Now &mdash; Sell with Confidence</div>
+        <div class="tc-title">Lead with proven value</div>
+        <div class="tc-script">&ldquo;TeamSense gives your frontline workers a dead-simple way to report absences via text, keeps supervisors informed in real time, and syncs everything back to your HRIS automatically. Communicate, Forms, and Employee Assistant let you reach and engage every worker &mdash; no app download required.&rdquo;</div>
+      </div>
+      <div class="talk-card tc-next">
+        <div class="tc-horizon">Next &mdash; Build Excitement</div>
+        <div class="tc-title">Share the near-term vision</div>
+        <div class="tc-script">&ldquo;We're building a Supervisor Control Surface that gives shift leaders a single view of who's missing, why, and what to do about it &mdash; within 30 seconds of shift start. No more scrambling across multiple systems.&rdquo;</div>
+      </div>
+      <div class="talk-card tc-later">
+        <div class="tc-horizon">Later &mdash; Paint the Vision</div>
+        <div class="tc-title">Anchor the long-term story</div>
+        <div class="tc-script">&ldquo;Where we're headed: TeamSense will detect gaps, recommend the best available replacement based on skills and certifications, and handle the outreach &mdash; all with supervisor approval. Think of it as your operations co-pilot for shift coverage.&rdquo;</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Guidance callout -->
+  <div style="margin-top:24px; background:var(--white); border:2px solid var(--bright-yellow); border-radius:16px; padding:24px 32px;">
+    <div style="font-size:14px; font-weight:700; color:var(--dark-teal); margin-bottom:8px;">Roadmap Conversation Guidelines</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; font-size:13px; color:#5a7a74; line-height:1.6;">
+      <div>
+        <span style="font-weight:700; color:var(--light-teal);">Do:</span> Share the progression story naturally. Attendance is the wedge that unlocks everything else. Position "Next" features as a reason to stay engaged and grow with us.
+      </div>
+      <div>
+        <span style="font-weight:700; color:var(--light-teal);">Do:</span> Frame "Later" items as strategic direction, not commitments. Use language like "where we're headed" and "our roadmap includes" rather than specific dates or delivery promises.
+      </div>
+      <div>
+        <span style="font-weight:700; color:var(--dark-orange);">Don't:</span> Commit to specific delivery dates for "Next" or "Later" items. Don't position planned features as available today. Don't use the internal term "TEDS" with customers.
+      </div>
+      <div>
+        <span style="font-weight:700; color:var(--dark-orange);">Don't:</span> Lead with infrastructure or data model details. Customers care about outcomes (knowing who's missing, filling gaps faster), not how the engine works under the hood.
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    TeamSense Product Roadmap &mdash; Internal Reference for GTM Teams &mdash; 2026
+  </div>
+
+</div>
+</body>
+</html>
