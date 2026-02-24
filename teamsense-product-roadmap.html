@@ -585,69 +585,70 @@
     </div>
   </div>
 
-  <!-- CX DETAILS -->
+  <!-- QUARTERLY DETAIL -->
   <div class="cx-details">
-    <h3>CX Request Mapping by Quarter</h3>
+    <h3>What Ships Each Quarter</h3>
 
     <div class="cx-quarter cxq-q1">
       <div class="cxq-label">Q1 2026 &mdash; Infrastructure &amp; Agent Foundation</div>
-      <h4>What's happening: Getting the foundation right</h4>
-      <p>Nothing ships to supervisors in Q1. We're building the agent infrastructure, automating shift assignment sync, validating data accuracy against HRIS, and creating a repeatable integration playbook. All CX requests shifted to Q2 due to engineering over-capacity. Only TSD-2159 (SOC II compliance blocker) remains in Q1.</p>
+      <h4>Laying the groundwork for everything that follows</h4>
+      <p>Nothing ships to supervisors in Q1 &mdash; and that's intentional. This quarter is about getting the data layer right so every product that follows can trust what it sees. We're building the multi-agent infrastructure that powers Conversational Shift Start, automating shift assignment sync (the #1 AZEK EAP bottleneck), and validating HRIS data accuracy against real customer environments. TEDS Foundation goes live for design partners, giving us a canonical employee identity layer that every product will build on.</p>
       <div class="cx-requests">
         <table>
-          <tr><th>CX Request</th><th>Signal</th><th>Status</th></tr>
-          <tr class="cx-highlight"><td><strong>Spanish SMS repeat prompt</strong> <span class="cx-tag">CX</span> <a href="https://www.notion.so/a8bc6cdb1d694232b4136aa32abc3b16" target="_blank" class="cx-source">Notion ↗</a></td><td>RICE 12</td><td>&rarr; Shifted to Q2</td></tr>
-          <tr class="cx-highlight"><td><strong>Missing EE UI translations</strong> <span class="cx-tag">CX</span> <a href="https://www.notion.so/19f6d2dbf27080e39dd4c815410de13b" target="_blank" class="cx-source">Notion ↗</a> <a href="https://teamsense.atlassian.net/browse/TSD-3576" target="_blank" class="cx-source">Jira ↗</a></td><td>RICE 12</td><td>&rarr; Shifted to Q2</td></tr>
-          <tr class="cx-highlight"><td><strong>"How late" in notifications</strong> <span class="cx-tag">CX</span> <a href="https://www.notion.so/c30204e0f8e349d6be4a7528f6c1bbd5" target="_blank" class="cx-source">Notion ↗</a></td><td>RICE 9, US Steel</td><td>&rarr; Shifted to Q2</td></tr>
-          <tr><td><strong>TL "Manage Account" 404 fix</strong></td><td>TSD-2159, SOC II</td><td>Stays Q1 (compliance blocker)</td></tr>
+          <tr><th>Key Deliverable</th><th>Why It Matters</th></tr>
+          <tr><td><strong>Agent Infrastructure (Internal)</strong></td><td>Multi-agent service extended for shift start conversation. NLU confirmation handling validated against AZEK data. The engine behind Q2's customer-facing launch.</td></tr>
+          <tr><td><strong>Automated Shift Assignment Sync</strong></td><td>Employee-to-shift mapping pulled automatically from HRIS. Eliminates manual hard-coding that blocked EAP scale.</td></tr>
+          <tr><td><strong>TEDS Foundation</strong></td><td>Canonical employee identity, roles, scopes, and defaults engine. Design partners + new customers onboard here. Powers permissions, filtering, and every product surface.</td></tr>
+          <tr><td><strong>Permissions &amp; Scoping</strong></td><td>Role-based access with site-first scope enforcement. Prerequisite for multi-site customers and supervisor-specific views.</td></tr>
+          <tr><td><strong>HRIS Integration Playbook</strong></td><td>Repeatable onboarding process. Target: &lt;4 weeks per customer (down from 15+ weeks with AZEK).</td></tr>
         </table>
       </div>
     </div>
 
     <div class="cx-quarter cxq-q2">
       <div class="cxq-label">Q2 2026 &mdash; Conversational Shift Start MVP + Points Engine Start</div>
-      <h4>What ships: Supervisors get their first conversational experience</h4>
-      <p>First supervisor-facing delivery. AI-composed shift start message via SMS with individual names &mdash; supervisors confirm/correct by replying naturally. Coverage triggers, adaptation logging, supervisor &amp; HR digests. Points Engine builds in parallel. TIP v1 ships as a customer-facing analytics product. CX scope trimmed to 3 focused items.</p>
+      <h4>Supervisors get their first conversational experience</h4>
+      <p>This is where TeamSense becomes visible to frontline supervisors for the first time. Five minutes after shift start, an AI agent texts supervisors with exactly who's here, who's missing, and what needs attention &mdash; using individual names and real context. Supervisors confirm or correct by replying naturally. No dashboard, no keywords, no app. The agent handles ~70% of attendance categorizations automatically; supervisors focus on the exceptions. In parallel, the Points Engine starts building, and TIP v1 ships as the first customer-facing analytics product.</p>
       <div class="cx-requests">
         <table>
-          <tr><th>CX Request</th><th>Signal</th><th>How It's Delivered</th></tr>
-          <tr class="cx-highlight"><td><strong>Absence duration in notifications</strong> <span class="cx-tag">CX</span> <a href="https://www.notion.so/2e86d2dbf270818494cbfb2f9ee93ea5" target="_blank" class="cx-source">Notion ↗</a></td><td>CX request</td><td>Enhances Stage 1 &mdash; "half day" vs "full day" context for coverage decisions.</td></tr>
-          <tr class="cx-highlight"><td><strong>&uarr; "How late" in supervisor notification</strong> <span class="cx-tag">CX &middot; Shifted</span> <a href="https://www.notion.so/c30204e0f8e349d6be4a7528f6c1bbd5" target="_blank" class="cx-source">Notion ↗</a></td><td>RICE 9, US Steel</td><td>Shifted from Q1. Builds during agent ship &mdash; directly enhances Stage 1 MVP message quality.</td></tr>
-          <tr class="cx-highlight"><td><strong>&starf; Custom welcome message</strong> <span class="cx-tag">CX &middot; New</span> <a href="https://www.notion.so/ad15565bbd734201a2b2185d85e10092" target="_blank" class="cx-source">Notion ↗</a></td><td>RICE 10, Low effort</td><td>Top CX pick #1. 4+ customers: Ryan Health, AGC Electronic, FlexNGate, Chick-fil-A. Pulled from Q4.</td></tr>
+          <tr><th>Key Deliverable</th><th>Why It Matters</th></tr>
+          <tr><td><strong>Conversational Shift Start MVP</strong></td><td>AI-composed SMS with individual names and context. Supervisor confirms/corrects via natural language reply. The core differentiator &mdash; no competitor offers this.</td></tr>
+          <tr><td><strong>Dual-Path Coverage Triggers</strong></td><td>After confirming a gap: on-site rebalancing or external outreach. Adaptation logging captures decisions that were previously invisible.</td></tr>
+          <tr><td><strong>Supervisor &amp; HR Digests</strong></td><td>Post-confirmation SMS wrap-up for supervisors. Aggregated cross-shift email digest for HR with confirmation breakdown and flagged items.</td></tr>
+          <tr><td><strong>TIP v1 &mdash; Unified Analytics</strong></td><td>EA + Attendance dashboard in admin app. TEDS-powered filtering (manager, shift, division, date). Near-real-time data with self-serve export and ROI baselines.</td></tr>
+          <tr><td><strong>Configurable Points Policy Engine</strong></td><td>Supports flat-value through 3D matrix configs (event type &times; timing &times; duration). HR uploads attendance policy PDF &rarr; AI extracts and structures the config.</td></tr>
         </table>
       </div>
     </div>
 
     <div class="cx-quarter cxq-q3">
       <div class="cxq-label">Q3 2026 &mdash; Points GA + Skills Matrix + Stage 2 Foundation</div>
-      <h4>What ships: Points engine goes live, skills data collection begins</h4>
-      <p>Conversational employee points interaction live. Threshold notifications. Points dashboard + pre-termination audit report. Skills Matrix (company-configurable taxonomy, certification tracking, supervisor validation). Coverage pattern analysis for Stage 2 planning.</p>
+      <h4>Points engine goes live, skills data collection begins</h4>
+      <p>The highest customer-demand feature goes GA. Employees text "What are my points?" in English or Spanish and get natural language answers. HR gets a full points dashboard with team balances, approaching thresholds, FMLA/ADA exclusions, and a pre-termination audit report. Skills Matrix launches with company-configurable taxonomies, certification tracking with expiration, and supervisor validation &mdash; laying the data foundation for intelligent coverage recommendations in Q4.</p>
       <div class="cx-requests">
         <table>
-          <tr><th>CX Request</th><th>Signal</th><th>How It's Delivered</th></tr>
-          <tr class="cx-highlight"><td><strong>Be the points calculation engine</strong> <span class="cx-tag">CX</span> <a href="https://www.notion.so/3096d2dbf27081a9beded8a24ec87bb6" target="_blank" class="cx-source">Notion ↗</a></td><td>Clayens RICE 5</td><td>This IS Points Engine GA. $30K MAGNA/COSMA, $10K Trilogy WTP.</td></tr>
-          <tr class="cx-highlight"><td><strong>Points threshold notifications</strong> <span class="cx-tag">CX</span> <a href="https://teamsense.atlassian.net/browse/TSD-2256" target="_blank" class="cx-source">Jira ↗</a></td><td>CX request</td><td>Proactive SMS alerts to employees + supervisors.</td></tr>
-          <tr class="cx-highlight"><td><strong>Approval/denial based on balances</strong> <span class="cx-tag">CX</span> <a href="https://www.notion.so/61760477bd124f608f9bf5efea05d483" target="_blank" class="cx-source">Notion ↗</a></td><td>TSD-2174</td><td>Architecture from Q2, operational Q3. Auto-deny insufficient PTO.</td></tr>
-          <tr class="cx-highlight"><td><strong>Points discrepancy escalation to HR</strong> <span class="cx-tag">CX</span> <a href="https://www.notion.so/0ff08da578834aa5a5b490d61f43d801" target="_blank" class="cx-source">CX DB ↗</a></td><td>CX request</td><td>Natural extension of pre-termination audit report.</td></tr>
-          <tr class="cx-highlight"><td><strong>Filter by shift/dept/type</strong> <span class="cx-tag">CX</span> <a href="https://www.notion.so/ce3b91ef0d144042babff58fe741acd7" target="_blank" class="cx-source">Notion ↗</a></td><td>All customers</td><td>TEDS-powered filtering deepens in Q3.</td></tr>
-          <tr class="cx-highlight"><td><strong>TL notification settings &amp; dashboard</strong> <span class="cx-tag">CX</span> <a href="https://www.notion.so/1906d2dbf27081459a80cb963d40cfe1" target="_blank" class="cx-source">Notion ↗</a></td><td>CX request</td><td>Supervisor Sal tertiary persona. Low complexity with TEDS.</td></tr>
-          <tr class="cx-highlight"><td><strong>HRIS data accuracy at scale</strong> <span class="cx-tag">CX</span> <a href="https://www.notion.so/0ff08da578834aa5a5b490d61f43d801" target="_blank" class="cx-source">CX DB ↗</a></td><td>Massive reach</td><td>Validated with 3+ EAP customers.</td></tr>
+          <tr><th>Key Deliverable</th><th>Why It Matters</th></tr>
+          <tr><td><strong>Conversational Employee Points</strong></td><td>Employees check points via SMS in English or Spanish. Threshold notifications proactively alert employees and supervisors. Proven 39% absenteeism reduction becomes even more powerful.</td></tr>
+          <tr><td><strong>Points Dashboard + Compliance</strong></td><td>Team points balances, approaching thresholds, FMLA/ADA exclusion rules, pre-termination audit report. Confirmation quality tiers (6-tier model). Enterprise-grade accountability.</td></tr>
+          <tr><td><strong>Skills &amp; Certifications Matrix</strong></td><td>Company-configurable skill taxonomy, certification tracking with expiration, supervisor validation, safety restrictions. Required before intelligent coverage recommendations can work.</td></tr>
+          <tr><td><strong>TIP v1.5 &mdash; Cross-Product Insights</strong></td><td>Content improvement tracking (before/after). EA + Attendance correlation. Communication metrics. ROI auto-calculation for 10+ customers.</td></tr>
+          <tr><td><strong>Approval/Denial Automation</strong></td><td>Auto-deny when insufficient PTO balance, structured denial reasons, balance-based decision support at absence time. Architecture from Q2, operational in Q3.</td></tr>
         </table>
       </div>
     </div>
 
     <div class="cx-quarter cxq-q4">
-      <div class="cxq-label">Q4 2026 &mdash; Recommendations + Automated Backfill + Category Proof</div>
-      <h4>What ships: Coverage becomes a supervisor-approved automated flow</h4>
-      <p>Ranked coverage recommendations, supervisor-approved automated backfill pilot, learning loop v1, forms self-service, multi-plant expansion. TIP v2 with confirmation tier analytics = category proof data.</p>
+      <div class="cxq-label">Q4 2026 &mdash; Intelligent Coverage + Automated Backfill + Category Proof</div>
+      <h4>Coverage becomes a supervisor-approved automated flow</h4>
+      <p>This is the quarter where the full vision comes together. When a supervisor confirms someone is missing, TeamSense recommends the 3&ndash;5 best available replacements ranked by skills, seniority, availability, and historical patterns. Supervisor approves via SMS reply, and the system handles outreach automatically. The learning loop captures every decision &mdash; producing operational data no HRIS can replicate. TIP v2 ships with confirmation tier analytics and category-proof data that justifies the platform to any executive.</p>
       <div class="cx-requests">
         <table>
-          <tr><th>CX Request</th><th>Signal</th><th>How It's Delivered</th></tr>
-          <tr class="cx-highlight" style="opacity:0.6;"><td><del><strong>Custom welcome message</strong></del> <span class="cx-tag">Pulled to Q2</span> <a href="https://www.notion.so/ad15565bbd734201a2b2185d85e10092" target="_blank" class="cx-source">Notion ↗</a></td><td><del>Ryan Health, RICE 10</del></td><td>See Q2 CX/Support Addition #1</td></tr>
-          <tr class="cx-highlight" style="opacity:0.6;"><td><del><strong>Communicate templates</strong></del> <span class="cx-tag">Pulled to Q2</span> <a href="https://www.notion.so/caf3f2983d6b4623b5e978ee0fef9d9f" target="_blank" class="cx-source">Notion ↗</a></td><td><del>Berner Food</del></td><td>See Q2 CX/Support Addition #2</td></tr>
-          <tr class="cx-highlight"><td><strong>Custom/templated forms</strong> <span class="cx-tag">CX</span> <a href="https://www.notion.so/45030ecf5eac45ccb439c5252c8a5d6d" target="_blank" class="cx-source">Notion ↗</a></td><td>A&amp;F Di Carlo</td><td>Limited self-service: acknowledgements, data collection.</td></tr>
-          <tr class="cx-highlight"><td><strong>Points accuracy audit trail</strong> <span class="cx-tag">CX</span> <a href="https://www.notion.so/0ff08da578834aa5a5b490d61f43d801" target="_blank" class="cx-source">CX DB ↗</a></td><td>CX request</td><td>Extension of Q3 Points GA into enterprise compliance.</td></tr>
-          <tr class="cx-highlight"><td><strong>TL permission to create occurrences</strong> <span class="cx-tag">CX</span> <a href="https://www.notion.so/b1f65b16fe2440d1b7638849af96522d" target="_blank" class="cx-source">Notion ↗</a></td><td>CX request</td><td>Enabled by TEDS role model + confirmation maturity.</td></tr>
+          <tr><th>Key Deliverable</th><th>Why It Matters</th></tr>
+          <tr><td><strong>Intelligent Coverage Recommendations</strong></td><td>Ranked candidate lists (3&ndash;5) by skills, seniority, availability, and historical patterns. Supervisor approves before any outreach. Configurable ranking rules for union compliance.</td></tr>
+          <tr><td><strong>Automated Backfill (Pilot)</strong></td><td>System detects gap &rarr; auto-generates recommendation &rarr; supervisor approves via SMS &rarr; system executes. Full control surface with override at every step.</td></tr>
+          <tr><td><strong>TIP v2 &mdash; Category Proof Data</strong></td><td>Confirmation tier analytics (6-tier model), adaptation patterns, coverage outcomes, points dashboards, agent accuracy trends. Data no competitor can replicate.</td></tr>
+          <tr><td><strong>Reconciliation &amp; Disputes</strong></td><td>Points accuracy audit trail, dispute/escalation workflows, cross-reference with HRIS attendance records. Enterprise compliance requirement.</td></tr>
+          <tr><td><strong>Multi-Plant Support</strong></td><td>Multiple sites on potentially different HRIS configs. Cross-plant comparative views. Unlocks enterprise expansion deals.</td></tr>
         </table>
       </div>
     </div>
